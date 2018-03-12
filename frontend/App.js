@@ -1,18 +1,4 @@
-{/*UPLOAD OPTION */ }
-{/* <Text
-            style={{
-              fontSize: 20,
-              marginBottom: 20,
-              textAlign: 'center',
-              marginHorizontal: 15,
-            }}>
-            Example: Upload ImagePicker result
-          </Text> */}
-{/* <Button
-            onPress={this._pickImage}
-            title="Pick an image from camera roll"
-          />
-          <Button onPress={this._takePhoto} title="Take a photo" /> */}
+
 
 import React from 'react';
 import {
@@ -35,7 +21,7 @@ export default class App extends React.Component {
     this.state = {
       image: null,
       uploading: false,
-      screen: 1,
+      screen: 'HOME',
     };
   }
   
@@ -44,6 +30,10 @@ export default class App extends React.Component {
   // ------------------------------------------------------
   setScreen(screen) {
     this.setState({screen: screen})
+  }
+
+  setUploading(uploading) {
+    this.setState({uploading: uploading})
   }
 
   // ---------------------
@@ -55,28 +45,26 @@ export default class App extends React.Component {
     // ------------------------------------------------------
     // STEP 1: HOME SCREEN - Take picture using native camera
     // ------------------------------------------------------
-    if (this.state.screen === 1) {
+    if (this.state.screen === 'HOME') {
       return (<HomeScreen setScreen={this.setScreen.bind(this)} nextScreen={this.state.screen}/>)
 
     // ------------------------------------------------------
     // STEP 2: ANALYZE SCREEN - Take picture using native camera
     // ------------------------------------------------------
-    } else if (this.state.screen === 2) {
+    } else if (this.state.screen === 'ANALYZE') {
       return (
         <View style={styles.container}>
           <LinearGradient colors={['#5161B9', '#9C69CC']} style={{ position: 'absolute', height: 900, width: 400 }} />
-          {/* {this._maybeRenderImage()} */}
+          {this._maybeRenderImage()}
         </View>
       );
     // ------------------------------------------------------
     // STEP 3: SPOTIFY SCREEN - After picture was taken
     // ------------------------------------------------------
-    } else if (this.state.screen === 3) {
+    } else if (this.state.screen === 'SPOTIFY') {
       return (
-        <View style={styles.container}>
-          <LinearGradient colors={['#5161B9', '#9C69CC']} style={{ position: 'absolute', height: 900, width: 400 }} />
-          <Image style={{ width: 150, height: 150 }} source={{ uri: 'https://media.giphy.com/media/UNBbBnOLA69YA/giphy.gif' }} />
-        </View>
+        <SpotifyScreen setScreen={this.setScreen.bind(this)} nextScreen={this.state.screen}/>
+        
       )
     }
   }
@@ -98,7 +86,6 @@ class HomeScreen extends React.Component {
       aspect: [4, 3],
     });
     this._handleImagePicked(pickerResult);
-    this.setState({ screen: 2 })
   };
 
   _handleImagePicked = async pickerResult => {
@@ -125,10 +112,11 @@ class HomeScreen extends React.Component {
   // This is a good place to make AJAX requests or setTimeout.
   // ------------------------------------------------------
   componentDidMount() {
-    setTimeout(() => {
-      console.log("inside setTimeout 2 seconds");
-      this.props.setScreen(3);
-    }, 2000);
+    this.props.setScreen('SPOTIFY');
+    // setTimeout(() => {
+    //   console.log("inside setTimeout 2 seconds");
+    //   this.props.setScreen(2);
+    // }, 2000);
   }
 
   render() {
@@ -136,15 +124,46 @@ class HomeScreen extends React.Component {
     <View style = {{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <View style={styles.container}>
         <LinearGradient colors={['#5161B9', '#9C69CC']} style={{ position: 'absolute', height: 900, width: 400 }} />
-        <View onPress={this._takePhoto} style={{ zIndex: 100 }}>
+        <TouchableOpacity onPress={this._takePhoto} style={{ zIndex: 100 }}>
           <Text style={{ fontSize: 20, color: 'white' }}>TAP TO BEGIN</Text>
           <Image style={{ width: 150, height: 150 }} source={{ uri: 'https://78.media.tumblr.com/48a0d13c52b402e976bc5d4416552671/tumblr_onew3c4x8a1vxu8n6o1_500.gif' }} />
-        </View>
+        </TouchableOpacity>
       </View>
     </View >
     );  
   }
 }
+
+class SpotifyScreen extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { screen: this.props.screen };
+  }
+
+  // ------------------------------------------------------
+  // Called after the component was rendered and it was attached to the DOM.
+  // This is a good place to make AJAX requests or setTimeout.
+  // ------------------------------------------------------
+  componentDidMount() {
+    setTimeout(() => {
+      console.log("inside setTimeout 2 seconds");
+      console.log("SpotifyScreen");
+      this.props.setScreen('HOME');
+    }, 2000);
+  }
+
+
+  render() {
+    return (
+      <View style={styles.container}>
+        <LinearGradient colors={['#5161B9', '#9C69CC']} style={{ position: 'absolute', height: 900, width: 400 }} />
+        <Image style={{ width: 150, height: 150 }} source={{ uri: 'https://media.giphy.com/media/UNBbBnOLA69YA/giphy.gif' }} />
+        <Text style={{ fontSize: 20, color: 'white' }}>IT'S LIT</Text>
+      </View>
+    )
+  }
+}
+
 
 
 // TODO: Create components and put methods in accordingly
@@ -187,8 +206,9 @@ _maybeRenderImage = () => {
     </View>
   );
 };
+
 _spotifyShow = () => {
-  this.setState({ screen: 3 })
+  this.setState({ screen: 'SPOTIFY' })
 }
 _share = () => {
   Share.share({
@@ -209,6 +229,42 @@ _pickImage = async () => {
   });
   this._handleImagePicked(pickerResult);
 };
+
+
+
+async function uploadImageAsync(uri) {
+ let apiUrl = 'https://file-upload-example-backend-dkhqoilqqn.now.sh/upload';
+
+ // Note:
+ // Uncomment this if you want to experiment with local server
+ //
+ // if (Constants.isDevice) {
+ //   apiUrl = `https://your-ngrok-subdomain.ngrok.io/upload`;
+ // } else {
+ //   apiUrl = `http://localhost:3000/upload`
+ // }
+
+ let uriParts = uri.split('.');
+ let fileType = uriParts[uriParts.length - 1];
+
+ let formData = new FormData();
+ formData.append('photo', {
+   uri,
+   name: `photo.${fileType}`,
+   type: `image/${fileType}`,
+ });
+
+ let options = {
+   method: 'POST',
+   body: formData,
+   headers: {
+     Accept: 'application/json',
+     'Content-Type': 'multipart/form-data',
+   },
+ };
+
+ return fetch(apiUrl, options);
+}
 
 const styles = StyleSheet.create({
   container: {
