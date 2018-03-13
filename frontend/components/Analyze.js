@@ -14,15 +14,23 @@ import {
 } from 'react-native';
 import Exponent, { Constants, ImagePicker, registerRootComponent, LinearGradient } from 'expo';
 
+{/* <View style={styles.imageContainer}>
+  <Image source={{ uri: 'https://mir-s3-cdn-cf.behance.net/project_modules/disp/35771931234507.564a1d2403b3a.gif' }} style={styles.image} />
+  <Text style={styles.systemMessage}>ANALYZING MOOD</Text>
+</View> */}
+
 export default class Analyze extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      isBackPressed: false
+    }
   }
 
   _maybeRenderImage = () => {
     let { image } = this.props;
-    
-    if (!image) {
+
+    if (this.state.isBackPressed) {
       return (
         <View style={styles.imageContainer}>
           <Image source={{ uri: 'https://mir-s3-cdn-cf.behance.net/project_modules/disp/35771931234507.564a1d2403b3a.gif' }} style={styles.image} />
@@ -38,6 +46,18 @@ export default class Analyze extends React.Component {
       );
     }
   };
+
+  componentWillMount() {
+    let { image } = this.props;
+    console.log(image);
+
+    if (!image) {
+      this.setState({isBackPressed: true});
+      this.props.setImage(null);
+      this.props.setUploading(false);
+      this.props.setScreen('HOME');
+    }
+  }
 
   render() {
     return (
@@ -57,7 +77,11 @@ export default class Analyze extends React.Component {
 
   componentDidMount() {
     setTimeout(() => {
-      this.props.setScreen('PLAYLIST');
+      if (this.props.uploading === true) {
+        this.props.setScreen('PLAYLIST');
+      } else {
+        this.props.setScreen('HOME');
+      }
     }, 5000);
   }
 }

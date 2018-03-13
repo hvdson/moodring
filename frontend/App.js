@@ -47,7 +47,6 @@ export default class App extends React.Component {
   // render state
   // ------------------------------------------------------
   render() {
-    let { image } = this.state;
 
     // ------------------------------------------------------
     // STEP 1: HOME SCREEN - Take picture using native camera
@@ -59,7 +58,7 @@ export default class App extends React.Component {
     // STEP 2: ANALYZE SCREEN - Take picture using native camera
     // ------------------------------------------------------
     } else if (this.state.screen === 'ANALYZE') {
-      return (<Analyze {...this.state} setScreen={this.setScreen.bind(this)}/>)
+      return (<Analyze {...this.state} setScreen={this.setScreen.bind(this)} setUploading={this.setUploading.bind(this)} setImage={this.setImage.bind(this)}/>)
 
     // ------------------------------------------------------
     // STEP 3: SPOTIFY SCREEN - After picture was taken

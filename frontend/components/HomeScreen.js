@@ -17,40 +17,35 @@ import Exponent, { Constants, ImagePicker, registerRootComponent, LinearGradient
 export default class HomeScreen extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { screen: this.props.screen };
+    // this.state = { screen: this.props.screen };
   }
 
+  // launches imagePicker for native system UI camera
   _takePhoto = async () => {
+    // clear existing image - keeps image url from last capture if not set to null
     this.props.setImage(null);
     let pickerResult = await ImagePicker.launchCameraAsync({
       allowsEditing: false,
       aspect: [4, 3],
     });
-    
+
     this._handleImagePicked(pickerResult);
-    this.props.setScreen('ANALYZE');
-    
   };
 
   _handleImagePicked = async pickerResult => {
     let uploadResponse, uploadResult;
     try {
-      this.props.setUploading(true);
       if (!pickerResult.cancelled) {
-        console.log(1);
         this.props.setImage(pickerResult.uri);
         uploadResponse = await this.uploadImageAsync(pickerResult.uri);
-        console.log(uploadResponse);
         uploadResult = await uploadResponse.json();
+        this.props.setUploading(true);
+        this.props.setScreen('ANALYZE');
       }
     } catch (e) {
-      console.log({ uploadResponse });
-      console.log({ uploadResult });
-      console.log({ e });
-      alert('Upload failed, sorry :(');
-    } finally {
-      // this.setState({ uploading: false });
       this.props.setUploading(false);
+      alert('Upload failed, sorry :(');
+      // this.props.setScreen('HOME');
     }
   };
 
