@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "test-server": "node test-server.js",
+    "spotify": "node spotify-api.js"
   },
   "author": "",
   "license": "MIT",
@@ -13,6 +15,7 @@
     "dotenv": "^2.0.0",
     "express": "^4.14.0",
     "multer": "^1.2.0",
-    "multer-s3": "^2.5.0"
+    "multer-s3": "^2.5.0",
+    "react-native-spotify-web-api": "^0.1.0"
   }
 }

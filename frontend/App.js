@@ -17,6 +17,7 @@ import Exponent, { Constants, ImagePicker, registerRootComponent, LinearGradient
 import HomeScreen from './components/HomeScreen.js'
 import Analyze from './components/Analyze.js'
 import Playlist from './components/Playlist.js'
+import SpotifyTest from './components/SpotifyTest.js'
 
 export default class App extends React.Component {
   constructor(props) {
@@ -24,7 +25,7 @@ export default class App extends React.Component {
     this.state = {
       image: null,
       uploading: false,
-      screen: 'HOME',
+      screen: 'TEST',
     };
   }
   
@@ -49,10 +50,14 @@ export default class App extends React.Component {
   render() {
     let { image } = this.state;
 
+
+    if (this.state.screen === 'TEST') {
+      return (<SpotifyTest {...this.state} setScreen={this.setScreen.bind(this)} setUploading={this.setUploading.bind(this)} setImage={this.setImage.bind(this)} />)
+
     // ------------------------------------------------------
     // STEP 1: HOME SCREEN - Take picture using native camera
     // ------------------------------------------------------
-    if (this.state.screen === 'HOME') {
+    } else if (this.state.screen === 'HOME') {
       return (<HomeScreen {...this.state} setScreen={this.setScreen.bind(this)} setUploading={this.setUploading.bind(this)} setImage={this.setImage.bind(this)}/>)
 
     // ------------------------------------------------------
