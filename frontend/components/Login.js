@@ -15,10 +15,6 @@ export default class Login extends React.Component {
 
   render() {
     console.log(this.state)
-    if (this.state.redirectData) {
-      this._returnHome()
-    }
-
     return (
       <View style={styles.container}>
 
@@ -37,6 +33,11 @@ export default class Login extends React.Component {
     );
   }
 
+  componentDidMount() {
+    if (this.state.redirectData) {
+      this._returnHome()
+    }
+  }
   // STEP 2 - LINK TO SPOTIFY AUTH
   // ------------------------------------------------------------
 
