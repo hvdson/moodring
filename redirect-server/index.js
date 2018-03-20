@@ -79,7 +79,7 @@ app.get('/callback', function (req, res) {
         // FIXME: CHANGE res.redirect to alex's computer @ spotify and index.html
         // res.redirect(`https://redirect-server.now.sh/?linkingUri=exp://10.30.27.27:19000/+` +
 
-        res.redirect(`https://redirect-server.now.sh/?linkingUri=exp://192.168.0.18:19000/+` +
+        res.redirect(`https://redirect-server.now.sh/?linkingUri=exp://192.168.1.155:19000/+` +
           querystring.stringify({
             access_token: access_token,
             refresh_token: refresh_token

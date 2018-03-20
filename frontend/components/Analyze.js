@@ -45,7 +45,8 @@ export default class Analyze extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <LinearGradient colors={['#5161B9', '#9C69CC']} style={{ position: 'absolute', height: 900, width: 400 }} />
+        {/* <LinearGradient colors={['#5161B9', '#9C69CC']} style={{ position: 'absolute', height: 900, width: 400 }} /> */}
+        <Image style={{ position: 'absolute', height: 900, width: 400 }} source={require('../assets/analyze-grid.gif')} />
         <TouchableOpacity>
           {this._maybeRenderImage()}
         </TouchableOpacity>
